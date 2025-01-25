@@ -8,9 +8,9 @@ import (
 )
 
 const (
-	UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0"
+	UserAgent    = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0"
 	BaseEndpoint = "https://www.instagram.com/api/v1/users/web_profile_info/?username=%s"
-	IGAppID   = "936619743392459"
+	IGAppID      = "936619743392459"
 )
 
 // TODO "I want it profile.ID not profile.Data.User.ID"
@@ -24,8 +24,12 @@ type APIResponse struct {
 			BioLink        string `json:"external_url"`
 			IsPrivate      bool   `json:"is_private"`
 			IsVerified     bool   `json:"is_verified"`
-			FollowersCount int    `json:"edge_followed_by.count"`
-			FollowingCount int    `json:"edge_follow.count"`
+			EdgeFollowedBy struct {
+				Count int `json:"count"`
+			} `json:"edge_followed_by"`
+			EdgeFollow struct {
+				Count int `json:"count"`
+			} `json:"edge_follow"`
 		} `json:"user"`
 	} `json:"data"`
 }
@@ -70,7 +74,7 @@ func LookupProfile(username string) (APIResponse, error) {
 
 func main() {
 
-    // TODO make dynamic username using prompt/argument(?)
+	// TODO make dynamic username using prompt/argument(?)
 	username := "zuck"
 
 	lookup, err := LookupProfile(username)
